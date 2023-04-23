@@ -1,0 +1,104 @@
+
+Payment Process:
+
+    (1) Zomato App:
+
+            Zomato FE (React JS)
+
+            Zomato BE (Node JS)
+
+
+    (2) Paytm Gateway - Paytm system
+
+
+
+Step1: Zomato FE will send a request to Zomato BE
+
+        /payment: 
+            req { 
+                amount,
+                email,
+                mobileNo
+            }
+
+
+Step2: Zomato BE will send a reponse to Zomato FE
+
+        res: will contain some secure and secret informations
+
+
+Step3: Zomato FE will take this secret information and go to Paytm System
+        -> credit card
+        -> debit card
+        -> netbanking
+        -> UPI Id
+        -> wallet
+        -> food cards
+
+
+Step4: now when user is on the paytm system, user will make a payment
+
+
+Step5: Paytm system will inform Zomato BE
+
+    /paymentCallback
+        -> success
+        -> failure
+
+Step6: Zomato BE will check the status of the payment from the Paytm system
+
+
+
+//// Paytm Gateway integration
+
+    -> https://developer.paytm.com/
+    -> login with existing paytm account, if not then create an account on paytm and then login
+    -> enable test mode
+    -> get the API keys (test API details) -> https://dashboard.paytm.com/next/apikeys
+    -> these API keys will be used in the zomato BE (Please do not copy anyone else's keys, use your own keys)
+    -> in order to use the above keys in Zomato BE:
+        -> need to create a special file in Zomato BE, known as .env file
+        -> copy paste the keys in this file
+    -> after this, we need an external library from Paytm
+        -> https://github.com/paytm/Paytm_Node_Checksum/blob/master/PaytmChecksum.js
+        -> download the above file and keep it in the Zomato BE controllers folder
+    -> Now, we need 5 packages from npmjs.com
+        -> dotenv : to read the contents of .env file
+        -> formidable : will be used to read the form data in the res/ red coming in nodejs 
+        -> uuid : th generate a unique id for every payment
+        -> https : to secure the communication with the paytm server
+        -> crypto : required by the PaytmChecksum.js
+
+        > npm i dotenv formidable uuid https crypto --save
+
+    -> The last thing is to create the 2 APIs
+        -> /payment
+        -> /paymentCallback
+
+    
+
+
+
+
+
+---> task for the learners
+
+        Create APIs for the following:
+            -> saveOrderDetails
+                POST request 
+                    {
+                        items,   //array
+                        amount,  // number   
+                        email,   // string
+                        mobileNo, // string
+                        address   // string
+                    }
+
+                    -> order controller
+                    -> order model
+                    -> order collection in MongoDB
+
+            -> getOrderDetailsByUser
+
+                GET request /getOrderDetailsByUser/:userEmail
+                response : for the given user email, you will find the orders
